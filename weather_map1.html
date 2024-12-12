@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<title>天气地图</title>
+<meta content="天气预报,天气,天气预报查询一周,天气预报15天查询,天气预报查询,北京天气,天气在线,气候,气象" name="keywords"/>
+<meta content="官方权威发布天气预报,逐三小时天气预报,提供天气预报查询一周,天气预报15天查询,空气质量,生活指数,旅游出行,交通天气等查询服务" name="description"/>
+<!-- 头部 end -->
+<link href="https://i.tq121.com.cn/c/core.css" rel="stylesheet"/>
+<link href="https://i.tq121.com.cn/c/weatherMap/index.css?20200804" rel="stylesheet"/>
+<link href="https://i.tq121.com.cn/c/weather2017/headStyle_1.css" rel="stylesheet"/>
+<script language="JavaScript" src="https://i.tq121.com.cn/j/core.js" type="text/javascript"></script>
+<script src="https://i.tq121.com.cn/j/jquery-1.8.2.js" type="text/javascript"></script>
+<script src="https://api.map.baidu.com/api?v=3.0&amp;ak=DsbAzjPxk6SdORpAdvTgbtl9s9tR4mgM" type="text/javascript"></script>
+<!-- 风场 -->
+<script src="https://i.tq121.com.cn/j/typhoon/bd_canvas.js" type="text/javascript"></script>
+<script src="https://j.i8tq.com/typhoon/weatherwind.js?2019" type="text/javascript"></script>
+</head>
+<body style="overflow:hidden;">
+<div class="mapContent">
+<div class="weather_li" style="position: absolute;min-width: 1200px">
+<div class="nav_li_box" style="width: 1200px">
+<div class="weather_li_left">
+<a href="http://www.weather.com.cn/">首页</a>
+<a href="http://www.weather.com.cn/forecast/">预报</a>
+<a href="http://www.weather.com.cn/alarm/">预警</a>
+<a href="http://www.weather.com.cn/radar/index2021.shtml">雷达</a>
+<a href="http://www.weather.com.cn/satellite/">云图</a>
+<a href="http://www.weather.com.cn/radar/">天气地图</a>
+<a href="http://products.weather.com.cn/yb.html?page=YB&amp;type=YB_TQQS_3D">专业产品</a>
+<a href="http://news.weather.com.cn/">资讯</a>
+<a href="http://www.weather.com.cn/video/">视频</a>
+<a href="http://www.weather.com.cn/life/">节气</a>
+<a href="http://www.weather.com.cn/weatherMap/indexSky.html?defaultCaseType=mySky">我的天空</a>
+<div class="more_li" href="javascript:void(0)">更多
+
+            <div class="weather_li_open" style="width:555px;">
+<p>
+<a href="http://typhoon.weather.com.cn/" target="_blank">台风路径</a>
+<a href="http://www.weather.com.cn/space/">空间天气</a>
+<a href="http://p.weather.com.cn/">图片</a>
+<a href="http://www.weather.com.cn/zt/">专题</a>
+<a href="http://www.weather.com.cn/air/">环境</a>
+<a href="http://www.weather.com.cn/trip/">旅游</a>
+<a href="http://www.weather.com.cn/climate/">生态</a>
+<a href="http://www.weather.com.cn/science/">气象科普</a>
+<a href="http://www.weather.com.cn/beltroad/">一带一路</a>
+<a href="http://www.weatherdt.com/">产创平台</a>
+</p>
+</div>
+</div>
+</div>
+<div class="clear:both"></div>
+</div>
+</div>
+<div class="map" id="map"></div>
+<div class="topBar">
+<div class="searchModel">
+<img class="logo" src="https://i.tq121.com.cn/i/weatherMap/logoR.png"/>
+<h1>天气地图</h1>
+<div class="searchBar">
+<img class="searchBtn" src="https://i.tq121.com.cn/i/weatherMap/searchBtn.png"/>
+<input id="searchValue" placeholder="搜索位置" type="text"/>
+</div>
+</div>
+<ul class="areaCheck" id="areaCheck">
+<li class="cur" id="radarAll">全国</li>
+<li>东北</li>
+<li>华北</li>
+<li>西北</li>
+<li>西南</li>
+<li>华中</li>
+<li>华东</li>
+<li>华南</li>
+</ul>
+<div class="sigleRadarName dis">
+<span id="sigleRadarName"></span><i>（单站雷达）</i>
+</div>
+<div class="windSiteTime dis"></div>
+<div class="sigleRadarList" style="display:none;">
+<p class="dis">区域拼图</p>
+<div class="sigleListModel">
+<div class="sigleList" id="sigleList">
+</div>
+</div>
+</div>
+</div>
+<div class="mapCtrBar">
+<div class="rainRankBtn dis">排</div>
+<div class="mapStyleBtn">
+<div class="mapStyleList">
+<div class="topSj"></div>
+<ul id="mapStyleBtn">
+<li class="cur" data-map="night" id="mapStyle0">
+<i class="mapStyleNight"></i>
+<p>光照</p>
+</li>
+<li data-map="tea" id="mapStyle1">
+<i class="mapStyleTea"></i>
+<p>深色</p>
+</li>
+<li data-map="blue" id="mapStyleWX">
+<i class="mapStyleBlue"></i>
+<p>卫星</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="mapCtrBarImg zoomIn"></div>
+<div class="mapCtrBarImg zoomOut"></div>
+<div class="mapCtrBarImg nowCity"></div>
+<div class="mapCtrBarImg allMap"></div>
+<div class="legendBtn"></div>
+</div>
+<div class="rlist" id="mapstyle" style="display: none;">
+<p>地图编辑 <i></i></p>
+<ul>
+<li><i data-type="railway"></i> 铁路</li>
+<li><i data-type="highway"></i> 高速及国道</li>
+<li><i data-type="arterial"></i> 城市主路</li>
+<li><i data-type="local"></i> 普通道路</li>
+<li><i data-type="subway"></i> 地铁</li>
+</ul>
+</div>
+<div class="skShowBox dis">
+<span class="cityBar_close"></span>
+<!-- <div class="sigleRadar dis">
+
+        <div class="sigleName">
+
+          <p class="title"><b id="sigleRadarName">北京</b><i>（单站）</i></p>
+
+          <p><span>观测日期</span><span id="sigleRadarDate">2019-11-05</span></p>
+
+          <p><span>观测时间</span><span id="sigleRadarTime">2019-11-05</span></p>
+
+          <p><span>数据范围</span><span id="sigleRadarRange">230km</span></p>
+
+        </div>
+
+      </div> -->
+<div class="weatherBox">
+<div class="cityBar">
+<img src="https://i.tq121.com.cn/i/weatherMap/localBar.png"/>
+<span class="cityName"></span>
+</div>
+<div class="weatherModel">
+<div class="skWeather">
+<span class="temp"></span>
+</div>
+<div class="focsWeather">
+<p class="hum"></p>
+<p class="wind"></p>
+<!-- <span class="weather"></span> -->
+</div>
+<a class="more" href="http://www.weather.com.cn/weather1d/101010200.shtml" id="moreWeather" target="_blank">
+<span>更多预报</span>
+<i></i>
+</a>
+</div>
+<div class="rainModel">
+<p class="rainMsg"></p>
+<div class="curve">
+<ul class="sc_l">
+<li class="li_1">
+
+                大雨
+
+              </li>
+<li class="li_2">
+
+                中雨
+
+              </li>
+<li class="li_3">
+
+                小雨
+
+              </li>
+</ul>
+<ul class="sc_b clearfix">
+<li>
+<i></i>
+</li>
+<li style="margin-left: 55px">
+
+                30<i></i>
+</li>
+<li>
+<i></i>
+</li>
+<li style="margin-left: 37px">
+
+                60<i></i>
+</li>
+<li style="margin-left: 37px">
+
+                90分钟<i></i>
+</li>
+</ul>
+<div class="container_bg">
+<p class="line1"></p>
+<p class="line2"></p>
+<p class="line3"></p>
+<p class="line4"></p>
+</div>
+<div class="container" id="rainLine"></div>
+</div>
+<div class="state">注：未来两小时降水预报是由雷达外推所得，仅供参考</div>
+</div>
+</div>
+</div>
+<div class="loadingOverlay dis"></div>
+<div class="loading dis">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+<div class="radarTips dis"></div>
+<div class="timeBar">
+<div class="changeDateType dis">
+<div class="result">实况</div>
+<p>更改时间</p>
+<ul>
+<li class="cur">实况</li>
+<li>预报</li>
+<div class="bottomSj"></div>
+</ul>
+</div>
+<div class="playBar">
+<div class="playBtn"></div>
+<div class="timeLine"><span></span></div>
+<ul class="night" id="timeSpan">
+</ul>
+</div>
+</div>
+<ul class="btnList">
+<li class="cur" data-type="radar" id="radarDefault"><i class="caseBtn_radar"></i><span>雷达</span></li>
+<li data-type="cloudy"><i class="caseBtn_cloudy"></i><span>云图</span></li>
+<li class="windSite" data-type="windSite"><i class="caseBtn_wind"></i><span>风流场</span></li>
+<li data-type="rain"><i class="caseBtn_rain"></i><span>降水</span></li>
+<li data-type="temp"><i class="caseBtn_temp"></i><span>气温</span></li>
+<!-- <li data-type="wind"><i class="caseBtn_windSite"></i><span>风</span></li> -->
+<li data-type="humidity"><i class="caseBtn_humidity"></i><span>相对湿度</span></li>
+<!-- <li data-type="qdl"><i class="caseBtn_qdl"></i><span>强天气</span></li> -->
+<!-- <li data-type="visibility"><i class="caseBtn_visibility"></i><span>能见度</span></li>
+
+      <li class="windBtn" data-type="wind">
+
+        <i class="caseBtn_wind"></i><span>风</span>          
+
+        <div class="windCase">
+
+          <p class="windImage">风力</p>
+
+          <p class="windSite">风流场</p>
+
+        </div>
+
+      </li> -->
+</ul>
+<div class="legend dis">
+<img src="https://i.tq121.com.cn/i/weatherMap/legend_radar.png"/>
+</div>
+<div class="rainRank dis">
+<h2>过去24小时降水排行<span>（全国）</span></h2>
+<div class="close"></div>
+<ul>
+</ul>
+<table table-layout="fixed">
+</table>
+<div class="tips">*根据截至今日<span></span>的累计24小时降水资料统计</div>
+</div>
+<div class="footer" style="position:absolute;bottom:0;border:0;">
+<div class="aboutUs" style="height:40px;line-height:40px;background:#292929;"><a href="http://www.pmsc.cn/" target="_blank">中国气象局公共气象服务中心</a> All Rights Reserved (2008-2024)</div>
+</div>
+</div>
+<script src="https://i.tq121.com.cn/j/weather2017/jquery.nicescroll.min.js" type="text/javascript"></script>
+<script>W.use(['j/weatherMap/interactive']);</script>
+<script type="text/javascript">
+
+  var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+
+  document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F080dabacb001ad3dc8b9b9049b36d43b' type='text/javascript'%3E%3C/script%3E"));
+
+  </script>
+</body>
+</html>
